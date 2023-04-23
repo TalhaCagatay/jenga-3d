@@ -5,9 +5,11 @@ using System.Linq;
 using _Game.Scripts.Core.Base;
 using _Game.Scripts.Game.Controller;
 using _Game.Scripts.Jenga.Glass;
+using _Game.Scripts.Jenga.Interface;
 using _Game.Scripts.Jenga.Stack.Interface;
 using _Game.Scripts.Jenga.Stone;
 using _Game.Scripts.Jenga.Wood;
+using _Game.Scripts.View.Helper;
 using _Game.Scripts.View.Interface;
 using _Game.Scripts.View.Views.Gameplay;
 using Lean.Pool;
@@ -20,7 +22,7 @@ namespace _Game.Scripts.Jenga.Stack.Controller
 {
     public class StackController : BaseMonoController, IStackController
     {
-        public event Action<List<IStack>> StacksPrepared;
+        public event Action<IJenga> InformationClicked;
         public event Action<IStack> SelectedStackChanged;
 
         [Header("Stack Offset Informations")] 
@@ -73,11 +75,13 @@ namespace _Game.Scripts.Jenga.Stack.Controller
                 var hits = Physics.RaycastNonAlloc(ray, result, float.MaxValue, _stackLayer);
                 if (hits > 0)
                 {
-                    var jengaBehaviour = result[0].transform.GetComponent<JengaBehaviour>();
-                    Log($"Jenga Grade:{jengaBehaviour.Grade}" +
-                        $"Jenga Domain:{jengaBehaviour.Domain}" +
-                        $"Jenga Standard ID:{jengaBehaviour.StandardID}" +
-                        $"Jenga Standard Description:{jengaBehaviour.StandardDescription}");
+                    var jenga = result[0].transform.GetComponent<IJenga>();
+                    HelperCanvas.ShowInformationPopup(jenga.Transform.position, $"<color=green>{jenga.Grade}</color>: {jenga.Domain}\n\n<color=green>Cluster</color=green>: {jenga.Cluster}\n\n<color=green>{jenga.StandardID}</color>: {jenga.StandardDescription}");
+                    InformationClicked?.Invoke(jenga);
+                    Log($"Jenga Grade:{jenga.Grade}" +
+                        $"Jenga Domain:{jenga.Domain}" +
+                        $"Jenga Standard ID:{jenga.StandardID}" +
+                        $"Jenga Standard Description:{jenga.StandardDescription}");
                 }
             }
 
@@ -112,9 +116,8 @@ namespace _Game.Scripts.Jenga.Stack.Controller
                     Stacks.Add(stackBehaviour);
                 }
 
-                SelectedStack = Stacks[0];
+                SelectedStack = Stacks[1];
                 CreateJengas(jengaInformations);
-                StacksPrepared?.Invoke(Stacks);
                 base.Init();
             }
         }

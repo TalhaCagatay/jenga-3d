@@ -16,9 +16,9 @@ namespace _Game.Scripts.View.Views.Gameplay
             base.Reset();
         }
 
-        public void AddListener(int focusID)
+        public void AddListener(int focusID, string title)
         {
-            FocusStackText.text = $"Select Stack {focusID}";
+            FocusStackText.text = $"Select {title}";
             onClick.AddListener(() => StackFocusClicked?.Invoke(focusID));
         }
     }

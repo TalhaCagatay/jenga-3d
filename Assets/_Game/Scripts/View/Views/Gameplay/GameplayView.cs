@@ -29,10 +29,12 @@ namespace _Game.Scripts.View.Views.Gameplay
 
         private void OnInitialized()
         {
-            for (var i = 0; i < GameController.Instance.GetController<IStackController>().Stacks.Count; i++)
+            var stacks = GameController.Instance.GetController<IStackController>().Stacks;
+            for (var i = 0; i < stacks.Count; i++)
             {
+                var stack = stacks[i];
                 var focusButton = Instantiate(_focusButton, _focusButtonParent);
-                focusButton.AddListener(i);
+                focusButton.AddListener(i, stack.ID);
                 FocusButtons.Add(focusButton);
             }
         }
