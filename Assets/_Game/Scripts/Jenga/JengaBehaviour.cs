@@ -11,6 +11,7 @@ namespace _Game.Scripts.Jenga
         [SerializeField] private Rigidbody _rigidbody;
 
         public Transform Transform => transform;
+        public Rigidbody Rigidbody => _rigidbody;
         public int ID { get; private set; }
         public string Subject { get; private set; }
         public string Grade { get; private set; }

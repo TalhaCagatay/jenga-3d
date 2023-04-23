@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Game.Scripts.Core.Base;
+using _Game.Scripts.Game.Controller;
 using _Game.Scripts.Jenga.Glass;
 using _Game.Scripts.Jenga.Stack.Interface;
 using _Game.Scripts.Jenga.Stone;
 using _Game.Scripts.Jenga.Wood;
+using _Game.Scripts.View.Interface;
+using _Game.Scripts.View.Views.Gameplay;
 using Lean.Pool;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using static _Game.Scripts.Logger.Logger;
 
@@ -18,7 +20,8 @@ namespace _Game.Scripts.Jenga.Stack.Controller
 {
     public class StackController : BaseMonoController, IStackController
     {
-        public event Action<List<StackBehaviour>> StacksPrepared;
+        public event Action<List<IStack>> StacksPrepared;
+        public event Action<IStack> SelectedStackChanged;
 
         [Header("Stack Offset Informations")] 
         [SerializeField] private float _stackBetweenDistance = 3f;
@@ -31,17 +34,39 @@ namespace _Game.Scripts.Jenga.Stack.Controller
         [SerializeField] private JengaWoodBehaviour _jengaWoodBehaviour;
         [SerializeField] private JengaStoneBehaviour _jengaStoneBehaviour;
 
-        private List<StackBehaviour> _stackBehaviours;
+        public List<IStack> Stacks { get; private set; }
+
+        private IStack _selectedStack;
+        public IStack SelectedStack
+        {
+            get => _selectedStack;
+            private set
+            {
+                if (value == _selectedStack)
+                    return;
+                
+                _selectedStack = value;
+                SelectedStackChanged?.Invoke(_selectedStack);
+            }
+        }
 
         public override void Init()
         {
-            _stackBehaviours = new();
+            GameController.Instance.SubscribeToInitialize(OnGameControllerInitialized);
+            Stacks = new();
             StartCoroutine(FetchJengaInformations());
         }
 
+        private void OnGameControllerInitialized()
+        {
+            GameController.Instance.GetController<IViewController>().GetView<GameplayView>().FocusButtons.ForEach(focusButton=>focusButton.StackFocusClicked += OnStackFocusClicked);
+        }
+
+        private void OnStackFocusClicked(int focusID) => SelectedStack = Stacks[focusID];
+
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
                 var result = new RaycastHit[1];
@@ -49,9 +74,19 @@ namespace _Game.Scripts.Jenga.Stack.Controller
                 if (hits > 0)
                 {
                     var jengaBehaviour = result[0].transform.GetComponent<JengaBehaviour>();
-                    Log($"Jenga StandardDescription:{jengaBehaviour.StandardDescription}");
+                    Log($"Jenga Grade:{jengaBehaviour.Grade}" +
+                        $"Jenga Domain:{jengaBehaviour.Domain}" +
+                        $"Jenga Standard ID:{jengaBehaviour.StandardID}" +
+                        $"Jenga Standard Description:{jengaBehaviour.StandardDescription}");
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                SelectedStack = Stacks[0];
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+                SelectedStack = Stacks[1];
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+                SelectedStack = Stacks[2];
         }
 
         private IEnumerator FetchJengaInformations()
@@ -74,11 +109,13 @@ namespace _Game.Scripts.Jenga.Stack.Controller
                     var stackPosition = new Vector3(_firstStackPosition.x + _stackBetweenDistance * index, 0f, 0f);
                     var stackBehaviour = LeanPool.Spawn(_stackBehaviour, stackPosition, Quaternion.identity, _stacksParent);
                     stackBehaviour.Init(uniqueGrade);
-                    _stackBehaviours.Add(stackBehaviour);
+                    Stacks.Add(stackBehaviour);
                 }
 
+                SelectedStack = Stacks[0];
                 CreateJengas(jengaInformations);
-                StacksPrepared?.Invoke(_stackBehaviours);
+                StacksPrepared?.Invoke(Stacks);
+                base.Init();
             }
         }
 
@@ -91,26 +128,26 @@ namespace _Game.Scripts.Jenga.Stack.Controller
                 var parent = GetParentStack(jengaInformation.grade);
                 if (jengaInformation.mastery == 0)//glass
                 {
-                    var jengaGlassBehaviour = LeanPool.Spawn(_jengaGlassBehaviour, parent.transform);
+                    var jengaGlassBehaviour = LeanPool.Spawn(_jengaGlassBehaviour, parent.Transform);
                     jengaGlassBehaviour.Map(jengaInformation);
                     parent.PlaceJenga(jengaGlassBehaviour);
                 }
                 else if (jengaInformation.mastery == 1)//wood
                 {
-                    var jengaWoodBehaviour = LeanPool.Spawn(_jengaWoodBehaviour, parent.transform);
+                    var jengaWoodBehaviour = LeanPool.Spawn(_jengaWoodBehaviour, parent.Transform);
                     jengaWoodBehaviour.Map(jengaInformation);
                     parent.PlaceJenga(jengaWoodBehaviour);
                 }
                 else if (jengaInformation.mastery == 2)//stone
                 {
-                    var jengaStoneBehaviour = LeanPool.Spawn(_jengaStoneBehaviour, parent.transform);
+                    var jengaStoneBehaviour = LeanPool.Spawn(_jengaStoneBehaviour, parent.Transform);
                     jengaStoneBehaviour.Map(jengaInformation);
                     parent.PlaceJenga(jengaStoneBehaviour);
                 }
             }
         }
 
-        private StackBehaviour GetParentStack(string grade) => _stackBehaviours.First(stack => stack.ID == grade);
+        private IStack GetParentStack(string grade) => Stacks.First(stack => stack.ID == grade);
         
         public override void Dispose()
         {

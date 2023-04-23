@@ -6,6 +6,7 @@ namespace _Game.Scripts.Jenga.Interface
     public interface IJenga
     {
         Transform Transform { get; }
+        Rigidbody Rigidbody { get; }
         int ID { get; }
         string Subject { get; }
         string Grade { get; }

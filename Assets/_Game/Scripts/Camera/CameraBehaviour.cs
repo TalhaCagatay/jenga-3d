@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using _Game.Scripts.Game.Controller;
-using _Game.Scripts.Jenga.Stack;
+﻿using _Game.Scripts.Game.Controller;
 using _Game.Scripts.Jenga.Stack.Interface;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _Game.Scripts.Camera
@@ -12,66 +9,51 @@ namespace _Game.Scripts.Camera
     {
         [SerializeField] private float _rotateSpeed = 1.0f;
         
-        private int _defaultTargetIndex = 0;
-        private Transform[] _targets;
-        private int _currentTargetIndex;
-        private Transform _currentTarget;
         private float _xRot;
         private float _yRot;
+        private bool _canRotate;
+        private IStackController _stackController;
 
         private void Start()
         {
-            GameController.Instance.GetController<IStackController>().StacksPrepared += OnStacksPrepared;
+            _canRotate = true;
+            _stackController = GameController.Instance.GetController<IStackController>(); 
+            _stackController.SelectedStackChanged += OnSelectedStackChanged;
         }
 
         private void OnDestroy()
         {
-            GameController.Instance.GetController<IStackController>().StacksPrepared -= OnStacksPrepared;
+            _stackController.SelectedStackChanged -= OnSelectedStackChanged;
         }
 
-        private void OnStacksPrepared(List<StackBehaviour> stacks)
+        private void OnSelectedStackChanged(IStack selectedStack)
         {
-            _targets = stacks.Select(stack => stack.transform).ToArray();
-            
             _xRot = transform.rotation.eulerAngles.y;
             _yRot = transform.rotation.eulerAngles.x;
-            _currentTargetIndex = _defaultTargetIndex;
-            SetCurrentTarget();
+            SetCurrentTarget(selectedStack.Transform);
         }
 
         private void Update()
         {
+            if (!_canRotate) return;
+            
             if (Input.GetMouseButton(0))
             {
                 _xRot += Input.GetAxis("Mouse X") * _rotateSpeed;
                 _yRot -= Input.GetAxis("Mouse Y") * _rotateSpeed;
                 transform.rotation = Quaternion.Euler(_yRot, _xRot, 0.0f);
-                transform.position = transform.rotation * new Vector3(0.0f, 0.0f, -10.0f) + _currentTarget.position;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                _currentTargetIndex = 0;
-                SetCurrentTarget();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                _currentTargetIndex = 1;
-                SetCurrentTarget();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                _currentTargetIndex = 2;
-                SetCurrentTarget();
+                transform.position = transform.rotation * new Vector3(0.0f, 2.0f, -10.0f) + _stackController.SelectedStack.Transform.position;
             }
         }
 
-        private void SetCurrentTarget()
+        private void SetCurrentTarget(Transform target)
         {
-            _currentTarget = _targets[_currentTargetIndex];
-            transform.rotation = Quaternion.Euler(_yRot, _xRot, 0.0f);
-            transform.position = transform.rotation * new Vector3(0.0f, 0.0f, -10.0f) + _currentTarget.position;
-            transform.LookAt(_currentTarget);
+            _canRotate = false;
+            transform.DOKill(false);
+            
+            // transform.rotation = Quaternion.Euler(_yRot, _xRot, 0.0f);
+            var targetPosition = transform.rotation * new Vector3(0.0f, 2.0f, -10.0f) + target.position;
+            transform.DOMove(targetPosition, 0.5f).SetEase(Ease.Linear).OnComplete(() => _canRotate = true);
         }
     }
 }

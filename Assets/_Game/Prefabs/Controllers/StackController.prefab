@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &75504154293249771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 75504154293249770}
+  - component: {fileID: 75504154293249769}
+  m_Layer: 0
+  m_Name: StackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &75504154293249770
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75504154293249771}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &75504154293249769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75504154293249771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f6caca7d468405da021ab895c3b5670, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stackBetweenDistance: 4
+  _firstStackPosition: {x: -5, y: 0, z: 0}
+  _stackLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _stacksParent: {fileID: 0}
+  _stackBehaviour: {fileID: 3856628904024830701, guid: 8291251461e5e4d40ab13e56a895d49b, type: 3}
+  _jengaGlassBehaviour: {fileID: -4822742630802951096, guid: 32e48f8700c91d5488400c8285f70839, type: 3}
+  _jengaWoodBehaviour: {fileID: 5220774203350327163, guid: 8fad0ba0d681dbf49aa5fefde467d0d2, type: 3}
+  _jengaStoneBehaviour: {fileID: -5177566051341226292, guid: 3ba08e99538d0fa468c60020f5756a28, type: 3}
