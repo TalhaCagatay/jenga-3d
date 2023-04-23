@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Game.Scripts.Camera
 {
-    public class CameraBehaviour : MonoBehaviour
+    public class CameraController : MonoBehaviour
     {
         [SerializeField] private float _rotateSpeed = 1.0f;
         
