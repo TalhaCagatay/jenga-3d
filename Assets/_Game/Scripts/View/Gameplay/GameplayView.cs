@@ -6,7 +6,7 @@ using _Game.Scripts.View.Interface;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Game.Scripts.View.Views.Gameplay
+namespace _Game.Scripts.View.Gameplay
 {
     public class GameplayView : MonoBehaviour, IView
     {

@@ -4,7 +4,6 @@ using _Game.Scripts.Jenga.Glass;
 using _Game.Scripts.Jenga.Interface;
 using _Game.Scripts.Jenga.Stack.Interface;
 using _Game.Scripts.View.Controller;
-using _Game.Scripts.View.Views.Gameplay;
 using TMPro;
 using UnityEngine;
 

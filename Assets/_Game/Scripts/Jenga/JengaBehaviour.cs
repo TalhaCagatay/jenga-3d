@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Game.Scripts.Game.Controller;
 using _Game.Scripts.Jenga.Interface;
 using _Game.Scripts.Jenga.Stack.Controller;
+using _Game.Scripts.View.Helper;
+using _Game.Scripts.View.Interface;
 using UnityEngine;
 
 namespace _Game.Scripts.Jenga
@@ -9,6 +12,8 @@ namespace _Game.Scripts.Jenga
     public abstract class JengaBehaviour : MonoBehaviour, IJenga
     {
         [SerializeField] private Rigidbody _rigidbody;
+        [SerializeField] private InformationText _studyTextRight;
+        [SerializeField] private InformationText _studyTextLeft;
 
         public Transform Transform => transform;
         public Rigidbody Rigidbody => _rigidbody;
@@ -38,6 +43,18 @@ namespace _Game.Scripts.Jenga
         private void Awake()
         {
             _rigidbody.isKinematic = true;
+
+            var worldCanvasTransform = GameController.Instance.GetController<IViewController>().WorldSpaceCanvas.transform;
+            if (_studyTextLeft.transform.parent.gameObject.activeSelf)
+            {
+                _studyTextLeft.SetTarget(_studyTextLeft.transform.parent);
+                _studyTextLeft.SetParent(worldCanvasTransform);   
+            }
+            if (_studyTextRight.transform.parent.gameObject.activeSelf)
+            {
+                _studyTextRight.SetTarget(_studyTextRight.transform.parent);
+                _studyTextRight.SetParent(worldCanvasTransform);   
+            }
         }
     }
     

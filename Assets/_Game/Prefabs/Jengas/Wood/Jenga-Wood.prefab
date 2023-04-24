@@ -131,11 +131,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Jenga-Wood
       objectReference: {fileID: 0}
+    - target: {fileID: 3938676688161984705, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4438758200194532182, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5889047647009872588, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500873183749187608, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -161,6 +169,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+--- !u!114 &2601016338467320489 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4620191585486705609, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+  m_PrefabInstance: {fileID: 7207621223167811936}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270d91dcb2404802a171ff1a2ccef35d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3571193624316567043 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6163722541765279587, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+  m_PrefabInstance: {fileID: 7207621223167811936}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270d91dcb2404802a171ff1a2ccef35d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!54 &5730824979600348923 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 3134900770528851867, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
@@ -184,3 +214,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 5730824979600348923}
+  _studyTextRight: {fileID: 3571193624316567043}
+  _studyTextLeft: {fileID: 2601016338467320489}

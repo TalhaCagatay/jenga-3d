@@ -3,8 +3,8 @@ using _Game.Scripts.Game.Controller;
 using _Game.Scripts.Jenga.Glass;
 using _Game.Scripts.Jenga.Stack.Controller;
 using _Game.Scripts.Jenga.Stack.Interface;
+using _Game.Scripts.View.Gameplay;
 using _Game.Scripts.View.Interface;
-using _Game.Scripts.View.Views.Gameplay;
 
 namespace _Game.Scripts.GameMode.Modes
 {

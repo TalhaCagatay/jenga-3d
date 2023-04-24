@@ -1,4 +1,4 @@
-﻿using _Game.Scripts.View.Views.Gameplay;
+﻿using _Game.Scripts.View.Gameplay;
 using UnityEditor;
 using UnityEditor.UI;
 

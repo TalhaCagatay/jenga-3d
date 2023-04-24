@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine.UI;
 
-namespace _Game.Scripts.View.Views.Gameplay
+namespace _Game.Scripts.View.Gameplay
 {
     public class FocusButton : Button
     {

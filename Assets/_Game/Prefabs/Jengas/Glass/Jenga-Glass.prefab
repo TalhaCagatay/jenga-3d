@@ -147,11 +147,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Jenga-Glass
       objectReference: {fileID: 0}
+    - target: {fileID: 3938676688161984705, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4438758200194532182, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5889047647009872588, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500873183749187608, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -203,8 +211,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 2693792689077249575}
+  _studyTextRight: {fileID: 6587307714693213919}
+  _studyTextLeft: {fileID: 5691730025052177013}
 --- !u!54 &2693792689077249575 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 3134900770528851867, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
   m_PrefabInstance: {fileID: 1072738011147801020}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5691730025052177013 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4620191585486705609, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+  m_PrefabInstance: {fileID: 1072738011147801020}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270d91dcb2404802a171ff1a2ccef35d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6587307714693213919 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6163722541765279587, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+  m_PrefabInstance: {fileID: 1072738011147801020}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270d91dcb2404802a171ff1a2ccef35d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
