@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Game.Scripts.Camera.Interface;
 using _Game.Scripts.Core.Base;
 using _Game.Scripts.Game.Controller;
 using _Game.Scripts.Jenga.Glass;
@@ -22,7 +23,6 @@ namespace _Game.Scripts.Jenga.Stack.Controller
 {
     public class StackController : BaseMonoController, IStackController
     {
-        public event Action<IJenga> InformationClicked;
         public event Action<IStack> SelectedStackChanged;
 
         [Header("Stack Offset Informations")] 
@@ -52,6 +52,8 @@ namespace _Game.Scripts.Jenga.Stack.Controller
             }
         }
 
+        private ICameraController _cameraController;
+
         public override void Init()
         {
             GameController.Instance.SubscribeToInitialize(OnGameControllerInitialized);
@@ -62,35 +64,34 @@ namespace _Game.Scripts.Jenga.Stack.Controller
         private void OnGameControllerInitialized()
         {
             GameController.Instance.GetController<IViewController>().GetView<GameplayView>().FocusButtons.ForEach(focusButton=>focusButton.StackFocusClicked += OnStackFocusClicked);
+            _cameraController = GameController.Instance.GetController<ICameraController>();
         }
 
         private void OnStackFocusClicked(int focusID) => SelectedStack = Stacks[focusID];
 
         private void Update()
         {
+            HandleInformationInput();
+        }
+
+        private void HandleInformationInput()
+        {
             if (Input.GetMouseButtonDown(1))
             {
-                var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = _cameraController.Camera.ScreenPointToRay(Input.mousePosition);
                 var result = new RaycastHit[1];
                 var hits = Physics.RaycastNonAlloc(ray, result, float.MaxValue, _stackLayer);
                 if (hits > 0)
                 {
                     var jenga = result[0].transform.GetComponent<IJenga>();
-                    HelperCanvas.ShowInformationPopup(jenga.Transform.position, $"<color=green>{jenga.Grade}</color>: {jenga.Domain}\n\n<color=green>Cluster</color=green>: {jenga.Cluster}\n\n<color=green>{jenga.StandardID}</color>: {jenga.StandardDescription}");
-                    InformationClicked?.Invoke(jenga);
+                    HelperCanvas.ShowInformationPopup(jenga.Transform.position,
+                        $"<color=green>{jenga.Grade}</color>: {jenga.Domain}\n\n<color=green>Cluster</color=green>: {jenga.Cluster}\n\n<color=green>{jenga.StandardID}</color>: {jenga.StandardDescription}");
                     Log($"Jenga Grade:{jenga.Grade}" +
                         $"Jenga Domain:{jenga.Domain}" +
                         $"Jenga Standard ID:{jenga.StandardID}" +
                         $"Jenga Standard Description:{jenga.StandardDescription}");
                 }
             }
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                SelectedStack = Stacks[0];
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-                SelectedStack = Stacks[1];
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-                SelectedStack = Stacks[2];
         }
 
         private IEnumerator FetchJengaInformations()
@@ -103,24 +104,33 @@ namespace _Game.Scripts.Jenga.Stack.Controller
             else
             {
                 Log("Jenga informations fetched successfully");
-                
                 var jengaInformationsJson = www.downloadHandler.text;
-                var jengaInformations = JsonHelper.DeserializeObject<List<JengaInformation>>(jengaInformationsJson);
-                var uniqueGrades = jengaInformations.Select(x => x.grade).Distinct().ToList();
-                for (var index = 0; index < uniqueGrades.Count; index++)
-                {
-                    var uniqueGrade = uniqueGrades[index];
-                    var stackPosition = new Vector3(_firstStackPosition.x + _stackBetweenDistance * index, 0f, 0f);
-                    var stackBehaviour = LeanPool.Spawn(_stackBehaviour, stackPosition, Quaternion.identity, _stacksParent);
-                    stackBehaviour.Init(uniqueGrade);
-                    Stacks.Add(stackBehaviour);
-                }
-
-                SelectedStack = Stacks[1];
+                var jengaInformations = DeserializeJengaJson(jengaInformationsJson);
+                var uniqueGrades = GetUniqueGrades(jengaInformations);
+                CreateStacksFromGrades(uniqueGrades);
+                SetSelectedStack(Stacks[1]);
                 CreateJengas(jengaInformations);
                 base.Init();
             }
         }
+
+        private void CreateStacksFromGrades(List<string> uniqueGrades)
+        {
+            for (var index = 0; index < uniqueGrades.Count; index++)
+            {
+                var uniqueGrade = uniqueGrades[index];
+                var stackPosition = new Vector3(_firstStackPosition.x + _stackBetweenDistance * index, 0f, 0f);
+                var stackBehaviour = LeanPool.Spawn(_stackBehaviour, stackPosition, Quaternion.identity, _stacksParent);
+                stackBehaviour.Init(uniqueGrade);
+                Stacks.Add(stackBehaviour);
+            }
+        }
+
+        private static List<JengaInformation> DeserializeJengaJson(string jengaInformationsJson) => JsonHelper.DeserializeObject<List<JengaInformation>>(jengaInformationsJson);
+
+        private static List<string> GetUniqueGrades(List<JengaInformation> jengaInformations) => jengaInformations.Select(x => x.grade).Distinct().ToList();
+
+        private void SetSelectedStack(IStack selectedStack) => SelectedStack = selectedStack;
 
         public void CreateJengas(List<JengaInformation> jengaInformations)
         {

@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8fbe1cde3074c98b7f9396a41464483, type: 3}
-  m_Name: GameModeInitStep
+  m_Script: {fileID: 11500000, guid: 5ad87262447141bfa7bfb81ccda83f7e, type: 3}
+  m_Name: ResetConfig
   m_EditorClassIdentifier: 
-  _dependencies:
-  - {fileID: 11400000, guid: c122857a402e0db43b24b55da16d7aba, type: 2}
-  - {fileID: 11400000, guid: e9c60ee11ad046a44949d86df2e87df0, type: 2}
+  ResetDuration: 1

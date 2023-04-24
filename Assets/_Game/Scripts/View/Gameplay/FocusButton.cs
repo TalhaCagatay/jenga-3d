@@ -1,10 +1,10 @@
 ﻿using System;
+using _Game.Scripts.Extensions.Button;
 using TMPro;
-using UnityEngine.UI;
 
 namespace _Game.Scripts.View.Gameplay
 {
-    public class FocusButton : Button
+    public class FocusButton : RegisterableButton
     {
         public event Action<int> StackFocusClicked;
 

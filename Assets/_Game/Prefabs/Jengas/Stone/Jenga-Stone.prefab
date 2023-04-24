@@ -127,9 +127,17 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4620191585486705611, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+      propertyPath: m_text
+      value: LEARNED
+      objectReference: {fileID: 0}
     - target: {fileID: 5889047647009872588, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6163722541765279585, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
+      propertyPath: m_text
+      value: LEARNED
       objectReference: {fileID: 0}
     - target: {fileID: 7026797678361293768, guid: 7949ce79bfaea9745aaa2bf29f209b19, type: 3}
       propertyPath: m_StaticEditorFlags

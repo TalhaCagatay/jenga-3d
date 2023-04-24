@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using _Game.Scripts.Configs.GameModes;
+using _Game.Scripts.Configs.Interface;
 using _Game.Scripts.Game.Controller;
 using _Game.Scripts.Jenga.Glass;
-using _Game.Scripts.Jenga.Stack.Controller;
 using _Game.Scripts.Jenga.Stack.Interface;
 using _Game.Scripts.View.Gameplay;
 using _Game.Scripts.View.Interface;
+using UnityEngine;
 
 namespace _Game.Scripts.GameMode.Modes
 {
     public class TestMyStackMode : GameModeBase
     {
+        private Rigidbody _explosionRigidbody;
         private IStackController _stackController;
         
         public override void Init()
@@ -26,12 +28,11 @@ namespace _Game.Scripts.GameMode.Modes
 
         public override void ApplyEffect()
         {
-            GameController.Instance.GetController<StackController>().SelectedStack.Jengas.ForEach(jenga =>
+            GameController.Instance.GetController<IStackController>().SelectedStack.Jengas.ForEach(jenga =>
             {
                 if (jenga is JengaGlassBehaviour)
                     jenga.Transform.gameObject.SetActive(false);
-                else
-                    jenga.Rigidbody.isKinematic = false;
+                jenga.Rigidbody.isKinematic = false;
             });
         }
     }

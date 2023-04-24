@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Game.Scripts.Configs.GameModes;
+using _Game.Scripts.Configs.Interface;
 using _Game.Scripts.Game.Controller;
+using _Game.Scripts.Helpers;
 using _Game.Scripts.Jenga.Interface;
 using _Game.Scripts.Jenga.Stack.Controller;
+using _Game.Scripts.View.Gameplay;
 using _Game.Scripts.View.Helper;
 using _Game.Scripts.View.Interface;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _Game.Scripts.Jenga
@@ -14,6 +19,11 @@ namespace _Game.Scripts.Jenga
         [SerializeField] private Rigidbody _rigidbody;
         [SerializeField] private InformationText _studyTextRight;
         [SerializeField] private InformationText _studyTextLeft;
+
+        private Vector3 _initialPosition;
+        private Quaternion _initialRotation;
+        private IViewController _viewController;
+        private ResetConfig _resetConfig;
 
         public Transform Transform => transform;
         public Rigidbody Rigidbody => _rigidbody;
@@ -44,7 +54,14 @@ namespace _Game.Scripts.Jenga
         {
             _rigidbody.isKinematic = true;
 
-            var worldCanvasTransform = GameController.Instance.GetController<IViewController>().WorldSpaceCanvas.transform;
+            _viewController = GameController.Instance.GetController<IViewController>();
+            _viewController.SubscribeToInitialize(OnInitialized);
+        }
+
+        private void OnInitialized()
+        {
+            _viewController.GetView<GameplayView>().ResetClicked += OnResetClicked;
+            var worldCanvasTransform = _viewController.WorldSpaceCanvas.transform;
             if (_studyTextLeft.transform.parent.gameObject.activeSelf)
             {
                 _studyTextLeft.SetTarget(_studyTextLeft.transform.parent);
@@ -55,6 +72,25 @@ namespace _Game.Scripts.Jenga
                 _studyTextRight.SetTarget(_studyTextRight.transform.parent);
                 _studyTextRight.SetParent(worldCanvasTransform);   
             }
+
+            _initialPosition = transform.position;
+            _initialRotation = transform.rotation;
+
+            _resetConfig = GameController.Instance.GetController<IGameConfigController>().GetConfig<ResetConfig>();
+        }
+
+        private void OnResetClicked()
+        {
+            if (_rigidbody.isKinematic) return;
+            
+            UIHelper.DisableButtons();
+            _rigidbody.isKinematic = true;
+            transform.DOMove(_initialPosition, _resetConfig.ResetDuration);
+            transform.DORotate(_initialRotation.eulerAngles, _resetConfig.ResetDuration).OnComplete(() =>
+            {
+                gameObject.SetActive(true);
+                UIHelper.EnableButtons();
+            });
         }
     }
     

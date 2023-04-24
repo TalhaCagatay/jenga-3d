@@ -13,8 +13,12 @@ namespace _Game.Scripts.View.Gameplay
         public event Action<IView> ViewShowed;
         public event Action<IView> ViewHided;
         public event Action TestMyStackClicked;
+        public event Action EarthQuakeClicked;
+        public event Action ResetClicked;
 
         [SerializeField] private Button _testMyStackButton;
+        [SerializeField] private Button _earthQuakeButton;
+        [SerializeField] private Button _resetButton;
         [SerializeField] private FocusButton _focusButton;
         [SerializeField] private RectTransform _focusButtonParent;
 
@@ -24,6 +28,8 @@ namespace _Game.Scripts.View.Gameplay
         {
             FocusButtons = new();
             _testMyStackButton.onClick.AddListener(() => TestMyStackClicked?.Invoke());
+            _earthQuakeButton.onClick.AddListener(() => EarthQuakeClicked?.Invoke());
+            _resetButton.onClick.AddListener(() => ResetClicked?.Invoke());
             GameController.Instance.GetController<IStackController>().SubscribeToInitialize(OnInitialized);
         }
 

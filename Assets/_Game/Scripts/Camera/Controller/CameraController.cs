@@ -1,7 +1,8 @@
 ﻿using _Game.Scripts.Camera.Interface;
+using _Game.Scripts.Configs;
+using _Game.Scripts.Configs.Interface;
 using _Game.Scripts.Core.Base;
 using _Game.Scripts.Game.Controller;
-using _Game.Scripts.Jenga.Interface;
 using _Game.Scripts.Jenga.Stack.Interface;
 using Cinemachine;
 using DG.Tweening;
@@ -12,7 +13,6 @@ namespace _Game.Scripts.Camera.Controller
     public class CameraController : BaseMonoController, ICameraController
     {
         [SerializeField] private CinemachineVirtualCamera _camera;
-        [SerializeField] private float _rotateSpeed = 1.0f;
 
         public UnityEngine.Camera Camera { get; private set; }
         
@@ -20,6 +20,7 @@ namespace _Game.Scripts.Camera.Controller
         private float _yRot;
         private bool _canRotate;
         private IStackController _stackController;
+        private GameConfig _gameConfig;
 
         public override void Init()
         {
@@ -27,6 +28,7 @@ namespace _Game.Scripts.Camera.Controller
             _canRotate = true;
             _stackController = GameController.Instance.GetController<IStackController>(); 
             _stackController.SelectedStackChanged += OnSelectedStackChanged;
+            _gameConfig = GameController.Instance.GetController<IGameConfigController>().GetConfig<GameConfig>();
             base.Init();
         }
 
@@ -48,8 +50,8 @@ namespace _Game.Scripts.Camera.Controller
             
             if (Input.GetMouseButton(0))
             {
-                _xRot += Input.GetAxis("Mouse X") * _rotateSpeed;
-                _yRot -= Input.GetAxis("Mouse Y") * _rotateSpeed;
+                _xRot += Input.GetAxis("Mouse X") * _gameConfig.CameraMovementSpeed;
+                _yRot -= Input.GetAxis("Mouse Y") * _gameConfig.CameraMovementSpeed;
                 _camera.transform.rotation = Quaternion.Euler(_yRot, _xRot, 0.0f);
                 _camera.transform.position = _camera.transform.rotation * new Vector3(0.0f, 2.0f, -10.0f) + _stackController.SelectedStack.Transform.position;
             }

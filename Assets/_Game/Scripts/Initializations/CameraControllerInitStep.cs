@@ -1,5 +1,4 @@
-﻿using _Game.Scripts.Camera;
-using _Game.Scripts.Camera.Interface;
+﻿using _Game.Scripts.Camera.Interface;
 using _Game.Scripts.Game.Controller;
 using UnityEngine;
 

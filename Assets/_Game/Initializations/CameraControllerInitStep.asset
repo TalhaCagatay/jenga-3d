@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984499734b5b49b88b6c74f6d90cb654, type: 3}
   m_Name: CameraControllerInitStep
   m_EditorClassIdentifier: 
-  _dependencies: []
+  _dependencies:
+  - {fileID: 11400000, guid: e9c60ee11ad046a44949d86df2e87df0, type: 2}
