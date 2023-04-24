@@ -14,23 +14,39 @@ namespace _Game.Scripts.View.Controller
 
         [SerializeField] private Canvas _worldSpaceCanvas;
 
+        private IView _currentView;
+        
         public Canvas WorldSpaceCanvas => _worldSpaceCanvas;
         public List<IView> Views { get; private set; }
 
         public override void Init()
         {
-            Views = new();
-            
-            //add all views
-            Views.Add(_gameplayView);
+            Views = new()
+            {
+                //add all views
+                _gameplayView // we only have 1 view for now 
+            };
 
             //initialize all views
             Views.ForEach(view => view.Init());
             
             //show first view
-            _gameplayView.Show();
+            ChangeView(_gameplayView);
             
             base.Init();
+        }
+        
+        public void ChangeView(IView viewToChange)
+        {
+            if (_currentView == viewToChange)
+            {
+                Logger.Logger.LogWarning("Can not change into same view");
+                return;
+            }
+            
+            _currentView?.Hide();
+            _currentView = viewToChange;
+            _currentView.Show();
         }
         
         public T GetView<T>() where T : class, IView => Views.First(view => view is T) as T;
