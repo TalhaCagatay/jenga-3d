@@ -106,6 +106,7 @@ namespace _Game.Scripts.Jenga.Stack.Controller
                 Log("Jenga informations fetched successfully");
                 var jengaInformationsJson = www.downloadHandler.text;
                 var jengaInformations = DeserializeJengaJson(jengaInformationsJson);
+                jengaInformations.Remove(jengaInformations[jengaInformations.Count - 1]); // removing the last element since the last element is algebra I
                 var uniqueGrades = GetUniqueGrades(jengaInformations);
                 CreateStacksFromGrades(uniqueGrades);
                 SetSelectedStack(Stacks[1]);
@@ -134,9 +135,9 @@ namespace _Game.Scripts.Jenga.Stack.Controller
 
         public void CreateJengas(List<JengaInformation> jengaInformations)
         {
-            jengaInformations.Sort(new JengaComparer());
-            
-            foreach (var jengaInformation in jengaInformations)
+            var orderedJenga = jengaInformations.OrderBy(jenga => jenga.domain).ThenBy(jenga => jenga.cluster).ThenBy(jenga => jenga.standardid);
+
+            foreach (var jengaInformation in orderedJenga)
             {
                 var parent = GetParentStack(jengaInformation.grade);
                 if (jengaInformation.mastery == 0)//glass
