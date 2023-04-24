@@ -5,11 +5,9 @@ using System.Linq;
 using _Game.Scripts.Camera.Interface;
 using _Game.Scripts.Core.Base;
 using _Game.Scripts.Game.Controller;
-using _Game.Scripts.Jenga.Glass;
+using _Game.Scripts.Jenga.Factory;
 using _Game.Scripts.Jenga.Interface;
 using _Game.Scripts.Jenga.Stack.Interface;
-using _Game.Scripts.Jenga.Stone;
-using _Game.Scripts.Jenga.Wood;
 using _Game.Scripts.View.Gameplay;
 using _Game.Scripts.View.Helper;
 using _Game.Scripts.View.Interface;
@@ -32,9 +30,6 @@ namespace _Game.Scripts.Jenga.Stack.Controller
         [SerializeField] private LayerMask _stackLayer;
         [SerializeField] private Transform _stacksParent;
         [SerializeField] private StackBehaviour _stackBehaviour;
-        [SerializeField] private JengaGlassBehaviour _jengaGlassBehaviour;
-        [SerializeField] private JengaWoodBehaviour _jengaWoodBehaviour;
-        [SerializeField] private JengaStoneBehaviour _jengaStoneBehaviour;
 
         public List<IStack> Stacks { get; private set; }
 
@@ -140,24 +135,10 @@ namespace _Game.Scripts.Jenga.Stack.Controller
             foreach (var jengaInformation in orderedJenga)
             {
                 var parent = GetParentStack(jengaInformation.grade);
-                if (jengaInformation.mastery == 0)//glass
-                {
-                    var jengaGlassBehaviour = LeanPool.Spawn(_jengaGlassBehaviour, parent.Transform);
-                    jengaGlassBehaviour.Map(jengaInformation);
-                    parent.PlaceJenga(jengaGlassBehaviour);
-                }
-                else if (jengaInformation.mastery == 1)//wood
-                {
-                    var jengaWoodBehaviour = LeanPool.Spawn(_jengaWoodBehaviour, parent.Transform);
-                    jengaWoodBehaviour.Map(jengaInformation);
-                    parent.PlaceJenga(jengaWoodBehaviour);
-                }
-                else if (jengaInformation.mastery == 2)//stone
-                {
-                    var jengaStoneBehaviour = LeanPool.Spawn(_jengaStoneBehaviour, parent.Transform);
-                    jengaStoneBehaviour.Map(jengaInformation);
-                    parent.PlaceJenga(jengaStoneBehaviour);
-                }
+                var jengaToSpawn = JengaFactory.GetJengaByMastery(jengaInformation.mastery);
+                var jengaBehaviour = LeanPool.Spawn(jengaToSpawn, parent.Transform);
+                jengaBehaviour.Map(jengaInformation);
+                parent.PlaceJenga(jengaBehaviour);
             }
         }
 
