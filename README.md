@@ -4,7 +4,7 @@ Suggested Unity Version -> 2021.3.21f1
 
 Every editable configuration can be edited easyly by navigating to the top menu bar || Jenga -> Configs
 
-<a href="https://ibb.co/HqLFQmT"><img src="https://i.ibb.co/yqmfJLF/config-description-image.png" alt="config-description-image" border="0"></a><br /><a target='_blank' href='https://tr.imgbb.com/'>upload no sign up</a><br />
+<a href="https://ibb.co/HqLFQmT"><img src="https://i.ibb.co/yqmfJLF/config-description-image.png" alt="config-description-image" border="0"></a>
 
 No need to save, changes will directly affect the game. Even while you are in play mode.
 
